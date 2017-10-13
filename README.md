@@ -15,7 +15,7 @@ The project includes following procedures:
 * Analyze the softmax probabilities of the new images
 * Summarize the results with a written report
 
-A detail witeup of the projects can be found in [CarND_writeup_P2.md](https://github.com/ek8203/CarND-Traffic-Sign-Classifier-Project/blob/maste/CarND_writeup_P2.md) document.
+A detail witeup of the projects can be found in [CarND_writeup_P2.md](https://github.com/ek8203/CarND-Traffic-Sign-Classifier-Project/blob/master/CarND_writeup_P2.md) document.
 
 ### Project directory content:
 
