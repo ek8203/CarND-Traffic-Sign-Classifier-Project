@@ -1,8 +1,3 @@
----
-widgets:
-  state: {}
-  version: 1.1.2
----
 
 ### Sefl-Driving Car Nanodegree Program. Term 1
 <img style="float: left;" src="https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg">
@@ -24,7 +19,7 @@ A detail witeup of the projects can be found in [CarND_writeup_P2.md](https://gi
 
 ### Project directory content:
 
-* [README.MD](https://github.com/ek8203/CarND-Traffic-Sign-Classifier-Project/blob/master/README.MD) - this file
+* [README.md](https://github.com/ek8203/CarND-Traffic-Sign-Classifier-Project/blob/master/README.MD) - this file
 * [CarND_writeup_P2.md](https://github.com/ek8203/CarND-Traffic-Sign-Classifier-Project/blob/master/CarND_writeup_P2.md) ([.html](https://github.com/ek8203/CarND-Traffic-Sign-Classifier-Project/blob/master/CarND_writeup_P2.html)) - project writeup
 * [Traffic_Sign_Classifier.md](https://github.com/ek8203/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.md) ([.html](https://github.com/ek8203/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.html), [.ipynb](https://github.com/ek8203/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)) - the actual project code with the solution
 
