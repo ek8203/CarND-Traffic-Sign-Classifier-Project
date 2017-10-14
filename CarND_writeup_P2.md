@@ -24,7 +24,7 @@ signs data set:
 
 #### 1. Basic summary of the data set
 
-* Dataset archive [traffic-signs-data.zip]() (exctracted to *traffic-signs-data/* directory)
+* Dataset archive **traffic-signs-data.zip** (exctracted to *traffic-signs-data/* directory)
 * The size of training set is 34799
 * The size of the validation set is 4410
 * The size of test set is 12630
@@ -33,7 +33,7 @@ signs data set:
 
 #### 2. Exploratory visualization of the dataset.
 
-Here is an exploratory visualization of the data set presented as a bar chart showing distribution of the training data set. Each bar represents one traffic sign (a class) and number of samples in the class. The mapping of traffic sign names to classesis provided in file [signnames.csv](). *(Code cell [3])*
+Here is an exploratory visualization of the data set presented as a bar chart showing distribution of the training data set. Each bar represents one traffic sign (a class) and number of samples in the class. The mapping of traffic sign names to classesis provided in file **signnames.csv**. *(Code cell [3])*
 
 ![Histogram](project_data/hist.png)
 
@@ -124,21 +124,31 @@ I did not try different types of the optimizer. A change of the lerning rate did
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+* training set accuracy of 100%
+* validation set accuracy of 97.7%
+* test set accuracy of 96.2%
 
 If an iterative approach was chosen:
+
 * What was the first architecture that was tried and why was it chosen?
+    * *The firrst architecture was the original Lenet-5 from the lab. I ran it after simple pre-processing of the training dataset and get validation accuracy of about 93%.*  
 * What were some problems with the initial architecture?
+    * *The problem was quit low accuracy - I could not get more than 93-95% depending on the number of epochs I was running. My goal was to get at least 97%*  
 * How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
+    * *First I added more data in the training dataset by doing data augmentation. I changed the normalization method to "min-max". I gave me additional 2% of accuracy. Then I added data dropouts in the flat layer and reached about 96-97%. The I tryed to modify the model architecture itself. I noticed that the model peforms better by expanding the flat layer (or, maybe, because of deeper convolutions). So I tested three models with different size of the flat layers. I also noticed that making the convolutions too deep affects the performance of the model - it runs too slow. So I made a trade off between the accuracy and performance and picked the medium size model (Lenet_2 - code cell [18]) as the final.*     
 * Which parameters were tuned? How were they adjusted and why?
+    * *The other parameters I adjusted were:*
+        - Number of epochs
+        - Dropout keep probability (increased to 0.75)
+        - Data batch size (increased to 150)
+        - I did not see much effect of changing the learning rate around the initial value of 0.001
 * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
+    * *As I pointed above my problem was to find a compromise between the performance and the accuracy. Also the dropout helped to reduce (I don't believe it was completely solved) overfitting of the wide full-connected layers.* 
 
 If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
+* What architecture was chosen? - *Lenet-5 (modified)* 
+* Why did you believe it would be relevant to the traffic sign application? - *Because it was choosen by Udacity in the related lessons :-). Also I beleive it is quit simple and performs well* 
+* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well? - *Actually I did not try different architectures to compare. But it was able to classify at least 2 out of 5 random images I downloaded from web.*
 
 ### Test a Model on New Images
 
