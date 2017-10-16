@@ -46,13 +46,13 @@ Below are some random examples of the traffic signs from the training dataset
 
 #### 1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
 
-As a first step, I decided to convert the images to grayscale to exclude a color factor from the processing which makes the image analysis more effective. Grayscaling is done by simply averaging the color pixels: (R + G + B) / 3 ([source](https://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/)) *(Code cell [5])*
+As a first step, I decided to convert the images to grayscale to exclude a color factor from the processing which makes the image analysis more effective. Grayscaling is done by simply averaging the color pixels: (R + G + B) / 3 ([source](https://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/)) *(Code cell [8])*
 
 Here is an example of a traffic sign images after grayscaling.
 
 ![Grayscale](project_data/gray_signs.png)
 
-As a last step, I normalized the image data because, as I learned in the course, it is mach easier for the model to leand when the model input data is normalized. At first I tried to use a simple normalization technique (X_train - 128)/128 learned in the lessons of Vincent Vanhoucke. Later I implemented Min-Max scaling to a range of [0.1, 0.9] from the TensorFlow lab which gave me better model training results.
+As a last step, I normalized the image data because, as I learned in the lesson, it is much easier for the model to leand when the model input data is normalized. I used a simple normalization technique (X_train - 128)/128 learned in the lessons of Vincent Vanhoucke. I also tried to implemented Min-Max scaling to a range of [0.1, 0.9] from the TensorFlow lab but it did give much advantage. *(Code cell [19])*
 
 I decided to generate additional data because, as pointed in [Goodfellow, Bengio, and Courville's book on Deep Learning](http://www.deeplearningbook.org/contents/regularization.html), "The best way to make a machine learning model generalize better is to train it on more data... One way to get around this problem is to create fake data and add it to the training set." That method is called "dataset augmentation". The same source states that "Dataset augmentation has been a particularly eﬀective technique for a speciﬁc classiﬁcation problem: object recognition" and also "operations, such as rotating the image or scaling the image, have also proved quite eﬀective."
 
@@ -62,7 +62,7 @@ To add more data to the the data set, I used NumPy and Scikit toolboxes to do da
 * Affine Transform
 * Projective Transform
 
-I generated about 20% images for each of the above transformations for each class and added it to the training dataset. *(Code cell [7, 8, 14])*.
+I generated extra images using the above transformations and added it to the training dataset. *(Code cell [10, 11, 12])*.
 Below are some examples of the augmented images.
 
 Flipup:
@@ -85,9 +85,16 @@ Projective Transform:
 
 ![Flip](project_data/proj_signs.png)
 
+Initially I generated about 20% more data for each class. Later I realized that the data is very poor destributed beetween the classes (see the histogram above). So I decided to add the new data to the classes with lack of data. The criteria was to reach at least 2/3 of the level of the class with miximum training data. *(Code cell [11])*. It resulted in much better model performance. Below is the data destribution after adding more data to the training dataset.
+![hist_add_train](project_data/hist_add_train.png)
+
+Adding more data almost doubled the size of the training dataset. It required to make adjastements to the validation dataset size as well. I concatinated the training and validation data and splitted it again in the same proportion as it was originally. *(Code cell [20])*. Below are histograms of data destribution in the training and validation datasets after new split.
+![hist_split_train](project_data/hist_split_train.png)
+![hist_split_valid](project_data/hist_split_valid.png)
+
 #### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
-I started with classic [LeNet-5](http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf) architecture and experimented with different layers in order to get minimum 97% validation accuracy. I found that making the Flat layers wider give me better results. My final model consisted of the following layers:
+I started with classic [LeNet-5](http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf) architecture and experimented with different layers in order to get minimum 97% validation accuracy. I found that making the Flat layers wider give me better results. My final model consisted of the following layers *(Code cell [24])*:
 
 | Layer         		|     Description	        					         | 
 |:----------------------|:------------------------------------------------------:| 
@@ -118,24 +125,24 @@ I started with classic [LeNet-5](http://yann.lecun.com/exdb/publis/pdf/lecun-98.
 
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
-To train the model, I used the AdamOptimizer with a learning rate of 0.001. The number of epochs used was 40. The batch size was 150. 
-I did not try different types of the optimizer. A change of the lerning rate did not give me better results. But I increased the batch size from from initial 128 for 150 to improve the accuracy. Also I increase the dropout keep probability from to 0.75. I found that the accuracy level was suturating at abote 40 epochs so I kept it at that level. 
+To train the model, I used the AdamOptimizer with a learning rate of 0.001. The number of epochs used was 20. The batch size was 150. 
+I did not try different types of the optimizer. A change of the learning rate did not give me better results. But I increased the batch size from from initial 128 for 150 to improve the accuracy. Also I increase the dropout keep probability from to 0.75. I found that the accuracy level started to saturate after about 15-20 epochs so I kept it at that level. *(Code cell [25])* 
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
-My final model results were:
+My final model results were *(Code cell [26])*:
 * training set accuracy of 100%
-* validation set accuracy of 97.7%
-* test set accuracy of 96.2%
+* validation set accuracy of 99.5%
+* test set accuracy of 96.7%
 
 If an iterative approach was chosen:
 
 * What was the first architecture that was tried and why was it chosen?
     * *The firrst architecture was the original Lenet-5 from the lab. I ran it after simple pre-processing of the training dataset and get validation accuracy of about 93%.*  
 * What were some problems with the initial architecture?
-    * *The problem was quit low accuracy - I could not get more than 93-95% depending on the number of epochs I was running. My goal was to get at least 97%*  
+    * *The problem was in quit low accuracy - I could not get more than 93-95% depending on the number of epochs I was running. My goal was to get at least 97% and I got it after modifying the model architecture and adding more data. But it required at least 40 ecpochs to run. The real breakthrough I got after I realized that the training data is destributed in classes not even: the difference between class sizes could be almost 2000 images! After "leveling" the classes in the training dataset the validation accuracy jumped to 99% in 10 epoches. Unfortunately it did not improve the test accuracy too much.*  
 * How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-    * *First I added more data in the training dataset by doing data augmentation. I changed the normalization method to "min-max". I gave me additional 2% of accuracy. Then I added data dropouts in the flat layer and reached about 96-97%. The I tryed to modify the model architecture itself. I noticed that the model peforms better by expanding the flat layer (or, maybe, because of deeper convolutions). So I tested three models with different size of the flat layers. I also noticed that making the convolutions too deep affects the performance of the model - it runs too slow. So I made a trade off between the accuracy and performance and picked the medium size model (Lenet_2 - code cell [18]) as the final.*     
+    * *First I added more data in the training dataset by doing data augmentation. I changed the normalization method to "min-max". I gave me additional 2% of accuracy. Then I added data dropouts in the flat layer and reached about 96-97%. The I tryed to modify the model architecture itself. I noticed that the model peforms better by expanding the flat layer (or, maybe, because of deeper convolutions). So I tested three models with different size of the flat layers. I also noticed that making the convolutions too deep affects the performance of the model - it runs too slow. So I made a trade off between the accuracy and performance and picked the medium size model (Lenet_2 - code cell [24]) as the final.*     
 * Which parameters were tuned? How were they adjusted and why?
     * *The other parameters I adjusted were:*
         - Number of epochs
@@ -147,8 +154,8 @@ If an iterative approach was chosen:
 
 If a well known architecture was chosen:
 * What architecture was chosen? - *Lenet-5 (modified)* 
-* Why did you believe it would be relevant to the traffic sign application? - *Because it was choosen by Udacity in the related lessons :-). Also I beleive it is quit simple and performs well* 
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well? - *Actually I did not try different architectures to compare. But it was able to classify at least 2 out of 5 random images I downloaded from web.*
+* Why did you believe it would be relevant to the traffic sign application? - *Because it was choosen by Udacity in the related lessons :-). Also I beleive it is quit simple and performs very well - it can get up to 99% accuracy in 10 epochs* 
+* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well? - *Actually I did not try different architectures to compare. But with a proper training data preprocessing it gave high accuracy and was able to classify at least 2-3 out of 5 random images I downloaded from web.*
 
 ### Test a Model on New Images
 
@@ -156,42 +163,91 @@ If a well known architecture was chosen:
 
 Here are five German traffic signs that I found on the web:
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+![new_images](project_data/new_signs.png)
 
-The first image might be difficult to classify because ...
+(The originals images are in folder [images/](images/))
 
-####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
+
+The first image is well aligned and should not be a problem. The second is slightly tilted. The last three images might be difficult to classify because, unlike the first two, the traffic signs are not centered in those images. Also the third image has watermarks that might be an additional issue.
+
+#### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
 Here are the results of the prediction:
 
 | Image			        |     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| No entry      		| No  entry   									| 
+| Road work   			| Road work										|
+| Turn left ahead		| Roundabout mandatory							|
+| Spead limit (60 km/h)	| Slippery road					 				|
+| Stop      			| Stop      	          						|
+
+![new_images](project_data/new_pred_signs.png)
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. This is much low accuracy compared to the accuracy on the test set of 96.7%.
 
-####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
+The code for making predictions on my final model is located in the *code cell [34]* of the Ipython notebook.
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+The first image (No entry) was predicted with 100% probability. The top five soft max probabilities were:
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+|1.000000	|No entry
+|0.000000	|Turn left ahead
+|0.000000	|Go straight or right
+|0.000000	|No passing
+|0.000000	|Turn right ahead
 
+For the second image, the model was almost sure that this was a Road work sign (probability of 0.99), and the image does contain a Road work sign. The top five soft max probabilities were:
 
-For the second image ...
+| Probability         	|     Prediction	        					| 
+|:---------------------:|:---------------------------------------------:| 
+|0.999990	|Road work
+|0.000010	|Bumpy road
+|0.000000	|Road narrows on the right
+|0.000000	|Double curve
+|0.000000	|Yield
 
-### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
-####1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
+The model was absolutely disoriented for the third and forth signs, the prediction was not even close to the actual sing on those images. The top five soft max probabilities for the third sign (Turn left ahead) were:
+
+| Probability         	|     Prediction	        					| 
+|:---------------------:|:---------------------------------------------:| 
+|0.953166	|Roundabout mandatory
+|0.043460	|Right-of-way at the next intersection
+|0.001953	|Pedestrians
+|0.000242	|Keep right
+|0.000237	|Go straight or left
+
+and for the forth sign (Speed limit 60km/h):
+
+| Probability         	|     Prediction	        					| 
+|:---------------------:|:---------------------------------------------:| 
+|0.953166	|Roundabout mandatory
+|0.043460	|Right-of-way at the next intersection
+|0.001953	|Pedestrians
+|0.000242	|Keep right
+|0.000237	|Go straight or left
+
+For the fifth image, the model was barely sure that this is a stop sign (probability of 0.43), but since it was the best guess, the sign was classified right. The top five soft max probabilities were
+
+| Probability         	|     Prediction	        					| 
+|:---------------------:|:---------------------------------------------:| 
+|0.464376	|Stop
+|0.270212	|Keep left
+|0.233469	|Road work
+|0.014092	|Priority road
+|0.007270	|Turn left ahead
+
+I connect the low prediction accuracy for the last three signs with a quality of the pre-processed images:
+
+![new_norm_images](project_data/new_norm_signs.png)
+
+The signs on the last tree are not centered on the image even after resizing which confused the model. The object of interest (sign) should be identified on the image and centered on the pre-processed image giving it to the model for classification. How to do that? - I hope to learn it later in the course.
+Another approach could be in improving data augmentation by adding images with the similar kind of distortion.
+
+###  (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
+#### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
+Not implemented
